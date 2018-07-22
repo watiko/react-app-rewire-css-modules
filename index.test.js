@@ -1,5 +1,6 @@
 const path = require('path')
 const subject = require('./index')
+const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 
 describe('CSS Modules rewire', () => {
 
@@ -132,7 +133,7 @@ describe('CSS Modules rewire', () => {
                 expect(cssModulesLoader.use[1].options).toEqual({
                     importLoaders: 1,
                     modules: true,
-                    localIdentName: '[local]___[hash:base64:5]'
+                    getLocalIdent: getCSSModuleLocalIdent
                 })
             })
         })
@@ -162,7 +163,7 @@ describe('CSS Modules rewire', () => {
                     minimize: true,
                     sourceMap: true,
                     modules: true,
-                    localIdentName: '[local]___[hash:base64:5]'
+                    getLocalIdent: getCSSModuleLocalIdent
                 })
             })
         })
