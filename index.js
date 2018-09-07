@@ -33,26 +33,39 @@ const addBeforeRule = (rulesSource, ruleMatcher, value) => {
     rules.splice(index, 0, value)
 }
 
-module.exports = function (config, env) {
-    const cssRule = findRule(config.module.rules, cssRuleMatcher)
-    const sassRule = cloneDeep(cssRule)
-    const cssModulesRule = cloneDeep(cssRule)
+function rewireCssModulesFactory({ sassLoaderOptions }) {
+    return function rewireCssModules(config, env) {
+        const cssRule = findRule(config.module.rules, cssRuleMatcher)
+        const sassRule = cloneDeep(cssRule)
+        const cssModulesRule = cloneDeep(cssRule)
 
-    cssRule.exclude = /\.module\.css$/
+        cssRule.exclude = /\.module\.css$/
 
-    const cssModulesRuleCssLoader = findRule(cssModulesRule, cssLoaderMatcher)
-    cssModulesRuleCssLoader.options = Object.assign({modules: true, getLocalIdent: getCSSModuleLocalIdent}, cssModulesRuleCssLoader.options)
-    addBeforeRule(config.module.rules, fileLoaderMatcher, cssModulesRule)
+        const cssModulesRuleCssLoader = findRule(cssModulesRule, cssLoaderMatcher)
+        cssModulesRuleCssLoader.options = Object.assign({modules: true, getLocalIdent: getCSSModuleLocalIdent}, cssModulesRuleCssLoader.options)
+        addBeforeRule(config.module.rules, fileLoaderMatcher, cssModulesRule)
 
-    sassRule.test = /\.s[ac]ss$/
-    sassRule.exclude = /\.module\.s[ac]ss$/
-    addAfterRule(sassRule, postcssLoaderMatcher, require.resolve('sass-loader'))
-    addBeforeRule(config.module.rules, fileLoaderMatcher, sassRule)
+        sassRule.test = /\.s[ac]ss$/
+        sassRule.exclude = /\.module\.s[ac]ss$/
+        addAfterRule(sassRule, postcssLoaderMatcher, {
+            loader: require.resolve('sass-loader'),
+            options: sassLoaderOptions,
+        })
+        addBeforeRule(config.module.rules, fileLoaderMatcher, sassRule)
 
-    const sassModulesRule = cloneDeep(cssModulesRule)
-    sassModulesRule.test = /\.module\.s[ac]ss$/
-    addAfterRule(sassModulesRule, postcssLoaderMatcher, require.resolve('sass-loader'))
-    addBeforeRule(config.module.rules, fileLoaderMatcher, sassModulesRule)
+        const sassModulesRule = cloneDeep(cssModulesRule)
+        sassModulesRule.test = /\.module\.s[ac]ss$/
+        addAfterRule(sassModulesRule, postcssLoaderMatcher, {
+            loader: require.resolve('sass-loader'),
+            options: sassLoaderOptions,
+        })
+        addBeforeRule(config.module.rules, fileLoaderMatcher, sassModulesRule)
 
-    return config
+        return config
+    }
 }
+
+const rewireCssModules = rewireCssModulesFactory({})
+rewireCssModules.rewireCssModulesFactory = rewireCssModulesFactory
+
+module.exports = rewireCssModules;

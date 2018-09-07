@@ -187,7 +187,7 @@ describe('CSS Modules rewire', () => {
                     expect(sassLoader.use.slice(0, 3)).toEqual(cssLoader.use)
                 })
                 it('should append the sass-loader', () => {
-                    expect(sassLoader.use[3]).toContain(`${path.sep}sass-loader${path.sep}`)
+                    expect(sassLoader.use[3].loader).toContain(`${path.sep}sass-loader${path.sep}`)
                 })
             })
 
@@ -199,7 +199,7 @@ describe('CSS Modules rewire', () => {
                     expect(sassModulesLoader.use.slice(0, 3)).toEqual(cssModulesLoader.use)
                 })
                 it('should append the sass-loader', () => {
-                    expect(sassModulesLoader.use[3]).toContain(`${path.sep}sass-loader${path.sep}`)
+                    expect(sassModulesLoader.use[3].loader).toContain(`${path.sep}sass-loader${path.sep}`)
                 })
             })
         })
@@ -220,7 +220,7 @@ describe('CSS Modules rewire', () => {
                     expect(sassLoader.loader.slice(0, 4)).toEqual(cssLoader.loader)
                 })
                 it('should append the sass-loader', () => {
-                    expect(sassLoader.loader[4]).toContain(`${path.sep}sass-loader${path.sep}`)
+                    expect(sassLoader.loader[4].loader).toContain(`${path.sep}sass-loader${path.sep}`)
                 })
             })
 
@@ -234,7 +234,7 @@ describe('CSS Modules rewire', () => {
                 })
 
                 it('should append the sass-loader', () => {
-                    expect(sassModulesLoader.loader[4]).toContain(`${path.sep}sass-loader${path.sep}`)
+                    expect(sassModulesLoader.loader[4].loader).toContain(`${path.sep}sass-loader${path.sep}`)
                 })
             })
         })

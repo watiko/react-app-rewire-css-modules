@@ -73,3 +73,27 @@ export default ({text}) => (
     <div className={styles.app}>{text}</div>
 )
 ```
+
+### Advanced Usage
+
+#### Configure sass-loader
+
+```javascript
+/* config-overrides.js */
+
+// `rewireCssModulesFactory({})` equivalent to the default exported value.;
+const { rewireCssModulesFactory } = require('react-app-rewire-css-modules');
+const path = require('path');
+
+module.exports = function override(config, env) {
+    const rewireCssModules = rewireCssModulesFactory({
+      includePaths: [
+        path.resolve(__dirname, "../scss/includePath")
+      ],
+    });
+    // ...
+    config = rewireCssModules(config, env);
+    // ...
+    return config;
+}
+```
